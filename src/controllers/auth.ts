@@ -18,6 +18,7 @@ type AuthResponse = {
 export const getAccessToken = async (code: string): Promise<AuthResponse | null> => {
   try {
     const userAuthentication = (await auth({ type: "oauth-user", code })) as AuthResponse;
+
     return {
       token: userAuthentication.token,
       tokenType: userAuthentication.tokenType,

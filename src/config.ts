@@ -10,6 +10,7 @@ const config = {
   githubAppPrivateKey: process.env.PRIVATE_KEY || "",
   defaultRepo: process.env.DEFAULT_REPO || "My-Coursework-Planner",
   defaultOwner: process.env.DEFAULT_OWNER || "CodeYourFuture",
+  clientUrl: process.env.CLIENT_URL || "http://localhost:3000",
 };
 
 if (!config.clientId) {
