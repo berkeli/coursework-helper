@@ -228,6 +228,46 @@ class Github {
       failed,
     };
   };
+
+  cloneSingleIssue = async (repo: string, issueNumber: number): Promise<boolean> => {
+    try {
+      const { data } = await this.o.rest.issues.get({
+        owner: this.defaultOwner,
+        repo,
+        issue_number: issueNumber,
+      });
+
+      if (!data.body) {
+        throw new Error("No issue body found");
+      }
+
+      let ok = await this.ensureRepoExists();
+      if (!ok) {
+        throw new Error("Error ensuring repo exists");
+      }
+
+      ok = await this.ensureMilestonesExist(repo);
+
+      if (!ok) {
+        throw new Error("Error ensuring milestones exist");
+      }
+
+      await this.o.rest.issues.create({
+        owner: this.owner,
+        assignees: [this.owner],
+        repo: this.defaultRepo,
+        title: data.title,
+        body: data.body,
+        milestones: data.milestone ? [this.milestoneMap[data.milestone.title]] : [],
+        labels: data.labels,
+      });
+
+      return true;
+    } catch (error) {
+      this.o.log.error("Couldn't clone issue", error as RequestError);
+      return false;
+    }
+  };
 }
 
 export default Github;

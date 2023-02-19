@@ -17,16 +17,30 @@ export default async (req: Request, res: Response) => {
 
     if (!issue && repo) {
       // Clone all issues from repo
-      await gh.cloneAllFromRepo(repo, allowDuplicates);
+      const result = await gh.cloneAllFromRepo(repo, allowDuplicates);
+
+      res.json({
+        success: true,
+        message: result,
+      });
     }
 
     if (issue && repo) {
       // Clone issue
-    }
+      await gh.cloneSingleIssue(repo, parseInt(issue, 10));
 
-    res.json({ repo });
+      res.json({
+        success: true,
+        message: {
+          issues: 1,
+          failed: 0,
+        },
+      });
+    }
   } catch (error) {
-    res.status(500).json(error);
-    return;
+    res.status(500).json({
+      success: false,
+      error,
+    });
   }
 };
