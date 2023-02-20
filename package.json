@@ -2,11 +2,11 @@
     "name": "coursework-helper",
     "version": "0.0.1",
     "description": "",
-    "main": "./dist/index.js",
+    "main": "./src/index.ts",
     "scripts": {
         "build": "tsc",
-        "dev": "concurrently \"tsc-watch\" \"nodemon ./dist/index.js\"",
-        "start": "node ./dist/index.js",
+        "dev": "concurrently \"tsc-watch\" \"nodemon ./api/index.js\"",
+        "start": "node ./api/index.js",
         "lint": "eslint '{src,test}/**/*.ts'",
         "lint-fix": "eslint --fix '{src,test}/**/*.ts'",
         "test": "jest",
@@ -17,8 +17,7 @@
         "dotenv": "^16.0.3",
         "express": "^4.18.2",
         "lodash": "^4.17.21",
-        "octokit": "^2.0.14",
-        "serverless-http": "^3.1.1"
+        "octokit": "^2.0.14"
     },
     "devDependencies": {
         "@types/cors": "^2.8.13",

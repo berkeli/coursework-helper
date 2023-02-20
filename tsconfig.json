@@ -11,7 +11,7 @@
       "pretty": true,
       "strict": true,
       "sourceMap": true,
-      "outDir": "./dist",
+      "outDir": "./api",
       "skipLibCheck": true,
       "noImplicitAny": true,
       "esModuleInterop": true,

@@ -1,7 +1,7 @@
 {
     "buildCommand": "yarn build",
     "functions": {
-        "dist/index.js": {
+        "api/index.js": {
             "memory": 1024,
             "maxDuration": 10
         }
