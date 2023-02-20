@@ -1,4 +1,5 @@
 {
+    "buildCommand": "yarn build",
     "functions": {
         "dist/index.js": {
             "memory": 1024,
