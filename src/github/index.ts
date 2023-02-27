@@ -7,7 +7,9 @@ import _ from "lodash";
 class Github {
   o: Octokit;
   owner = "";
+  ownerId = "";
   defaultRepo: string;
+  repoId = "";
   defaultOwner: string;
   milestoneMap: {
     [key: string]: number;
@@ -24,6 +26,7 @@ class Github {
       .getAuthenticated()
       .then((resp) => {
         this.owner = resp.data.login;
+        this.ownerId = resp.data.node_id;
       })
       .catch((error) => {
         throw new Error(error);
@@ -32,12 +35,14 @@ class Github {
 
   createDefaultRepo = async (): Promise<boolean> => {
     try {
-      await this.o.rest.repos.createForAuthenticatedUser({
+      const { data: repo } = await this.o.rest.repos.createForAuthenticatedUser({
         name: config.defaultRepo,
         has_issues: true,
         private: false,
         has_projects: true,
       });
+
+      this.repoId = repo.node_id;
 
       // remove default labels
       const data = await this.o.paginate(this.o.rest.issues.listLabelsForRepo, {
@@ -86,6 +91,8 @@ class Github {
           has_projects: true,
         });
       }
+
+      this.repoId = data.node_id;
 
       return true;
     } catch (error) {
@@ -265,6 +272,17 @@ class Github {
       return true;
     } catch (error) {
       this.o.log.error("Couldn't clone issue", error as RequestError);
+      return false;
+    }
+  };
+
+  createProject = async (name: string = "CYF Coursework", body: string): Promise<boolean> => {
+    try {
+      await this.o.graphql();
+
+      return true;
+    } catch (error) {
+      this.o.log.error("Error creating project", error as RequestError);
       return false;
     }
   };

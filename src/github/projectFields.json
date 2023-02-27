@@ -1,0 +1,98 @@
+[
+    {
+        "name": "Status",
+        "dataType": "SINGLE_SELECT",
+        "singleSelectOptions": [
+            {
+                "name": "📋 Backlog",
+                "color": "GRAY",
+                "description": "This is a backlog item"
+            },
+            {
+                "name": "🔖 Ready",
+                "color": "GRAY",
+                "description": "This is a ready item"
+            },
+            {
+                "name": "🏗 In progress",
+                "color": "GRAY",
+                "description": "This is an in progress item"
+            },
+            {
+                "name": "👀 In review",
+                "color": "GRAY",
+                "description": "This is an in review item"
+            },
+            {
+                "name": "✅ Done",
+                "color": "GRAY",
+                "description": "This is a done item"
+            }
+        ]
+    },
+    {
+        "name": "Priority",
+        "dataType": "SINGLE_SELECT",
+        "singleSelectOptions": [
+            {
+                "name": "🔑 Key",
+                "color": "GRAY",
+                "description": "This is a key priority item"
+            },
+            {
+                "name": "🏔 My Focus",
+                "color": "GRAY",
+                "description": "This is a my focus priority item"
+            },
+            {
+                "name": "🏕 Mandatory",
+                "color": "GRAY",
+                "description": "This is a mandatory item"
+            },
+            {
+                "name": "🏝 Stretch",
+                "color": "GRAY",
+                "description": "This is a stretch item"
+            }
+        ]
+    },
+    {
+        "name": "Size",
+        "dataType": "SINGLE_SELECT",
+        "singleSelectOptions": [
+            {
+                "name": "🦔 Tiny",
+                "color": "GRAY",
+                "description": "This is a tiny item"
+            },
+            {
+                "name": "🐇 Small",
+                "color": "GRAY",
+                "description": "This is a small item"
+            },
+            {
+                "name": "🐂 Medium",
+                "color": "GRAY",
+                "description": "This is a medium item"
+            },
+            {
+                "name": "🦑 Large",
+                "color": "GRAY",
+                "description": "This is a large item"
+            },
+            {
+                "name": "🐋 X-Large",
+                "color": "GRAY",
+                "description": "This is a huge item"
+            }
+        ]
+    },
+    {
+        "name": "Time",
+        "dataType": "NUMBER"
+    },
+    {
+        "name": "Deadline",
+        "dataType": "DATE"
+    }
+]
