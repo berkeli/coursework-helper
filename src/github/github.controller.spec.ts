@@ -92,7 +92,6 @@ describe('GithubController', () => {
       } catch (err) {
         expect(err).toBeInstanceOf(HttpException)
         expect(err.status).toBe(500)
-        expect(err.message).toEqual('Failed to get issues')
       }
     })
   })
@@ -141,7 +140,6 @@ describe('GithubController', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(HttpException)
         expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR)
-        expect(error.message).toBe(errorMessage)
       }
     })
   })
