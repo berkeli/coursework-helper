@@ -1,25 +1,22 @@
 {
-    "compilerOptions": {
-      "allowJs": false,
-      "lib": ["es2015", "es2017"],
-      "module": "commonjs",
-      "moduleResolution": "nodenext",
-      "target": "es6",
-      "noImplicitReturns": true,
-      "noFallthroughCasesInSwitch": true,
-      "noUnusedLocals": true,
-      "pretty": true,
-      "strict": true,
-      "sourceMap": true,
-      "outDir": "./dist",
-      "skipLibCheck": true,
-      "noImplicitAny": true,
-      "esModuleInterop": true,
-      "declaration": true,
-      "resolveJsonModule": true
-    },
-    "include": [
-      "src/**/*"
-    ],
-    "compileOnSave": true
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true 
   }
+}

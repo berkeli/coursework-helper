@@ -1,64 +1,43 @@
-import projectFields from "./projectFields.json";
-
-type Field = {
-  name: string;
-  dataType: "DATE" | "NUMBER" | "SINGLE_SELECT";
-  singleSelectOptions?: {
-    name: string;
-    color: string;
-    description: string;
-  }[];
-};
-
-function fieldToGql(field: Field) {
-  return ` createProjectV2Field(input: { 
-        name: "${field.name}",
-        projectId: $projectId, 
-        dataType: ${field.dataType},
-        singleSelectOptions: [${
-          field.singleSelectOptions?.map(
-            (option) => `{
-                name: "${option.name}", 
-                color: ${option.color}, 
-                description: "${option.description}"
-            }`
-          ) || []
-        }]
-    }) {
-        projectV2Field {
-            ... on ${field.dataType === "SINGLE_SELECT" ? "ProjectV2SingleSelectField" : "ProjectV2Field"} {
-              id
-          }
-        }
-      }
-`;
-}
-
-export const createProject = `
-mutation CreateProject($title: String = "CYF Coursework", $ownerId: ID!, $repositoryId: ID!) {
-    createProjectV2(input: { title: $title, ownerId: $ownerId, repositoryId: $repositoryId }) {
+export const makeProjectPublicMutation: string = `
+mutation makeProjectPublic($projectId: ID!) {
+  updateProjectV2(input: {projectId: $projectId, public: true}) {
       projectV2 {
-        id
+          id
       }
-    }
-  }  
-`;
-
-export const makeProjectPublic = `
-mutation UpdateProject($projectId: ID!) {
-    createProjectV2(input: { id: $projectId, public: true }) {}
   }
-`;
+}
+`
 
-let createProjectFieldsQ = `mutation createProjectV2Fields($projectId: ID!) {
-`;
+export const addProjectV2ItemByIdMutation = `
+mutation AddProjectV2ItemById($projectId: ID!, $contentId: ID!) {
+  addProjectV2ItemById(input: {projectId: $projectId, contentId: $contentId}) {
+    clientMutationId
+  }
+}`
 
-projectFields.forEach((field, id) => {
-  createProjectFieldsQ += `
-        field_${id}: ${fieldToGql(field as Field)}
-    `;
-});
+export const getUserProjectsV2Query = `
+query User($login: String!) {
+  user(login: $login) {
+      projectsV2(first: 10, query: "coursework planner") {
+          nodes {
+              id
+              title
+              public
+              repositories(first: 10) {
+                  nodes {
+                      id
+                      name
+                  }
+              }
+          }
+      }
+  }
+}`
 
-console.log(createProjectFieldsQ + "}");
-
-export const createProjectFields = createProjectFieldsQ;
+export const linkProjectV2RepositoryMutation = `
+mutation linkProjectV2ToRepository($projectId: ID!, $repositoryId: ID!) {
+  linkProjectV2ToRepository(input: {projectId: $projectId, repositoryId: $repositoryId}) {
+    clientMutationId
+  }
+}
+`
