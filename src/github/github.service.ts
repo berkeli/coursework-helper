@@ -349,9 +349,14 @@ export class GithubService {
     if (!project?.id) {
       span.end()
       throw new Error(
-        "No project found that matches 'coursework planner' query",
+        "No project found that matches 'coursework planner' query, please clone the project template provided.",
       )
     }
+
+    log.debug(
+      `Found project ${project.id}`,
+      'GithubService:setupDefaultProject',
+    )
 
     if (!project.repositories.nodes.length) {
       // add default repo to project
@@ -447,6 +452,7 @@ export class GithubService {
 
   async cloneAllIssues(
     sourceRepoName: string,
+    sprint: string,
     allowDuplicates: boolean = false,
   ): Promise<CloneResponse> {
     const span = this.tracer.startSpan('cloneAllIssues')
@@ -483,11 +489,27 @@ export class GithubService {
           userIssueMap[issue.title] = true
         }
       })
+
+      log.debug("User's issues", 'GithubService:cloneAllIssues')
+      log.debug(userIssueMap, 'GithubService:cloneAllIssues')
     }
 
     const res = new CloneResponse(issues.length)
-
+    log.debug(`Cloning ${issues.length} issues`, 'GithubService:cloneAllIssues')
     for (const issue of issues) {
+      // skip if issue is not in sprint
+      if (
+        sprint &&
+        issue.labels.findIndex((l) => {
+          if (typeof l === 'string') {
+            return l.toLowerCase() === sprint.toLowerCase()
+          }
+          return l.name.toLowerCase() === sprint.toLowerCase()
+        }) === -1
+      ) {
+        continue
+      }
+
       if (!issue.body || userIssueMap[issue.title]) {
         res.skipped++
         continue

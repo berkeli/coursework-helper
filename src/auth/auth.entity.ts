@@ -8,5 +8,5 @@ export class AuthEntity {
   tokenType: string
 
   @ApiProperty()
-  expiresAt: string
+  type: string
 }

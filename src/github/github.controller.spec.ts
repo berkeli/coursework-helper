@@ -92,6 +92,7 @@ describe('GithubController', () => {
       } catch (err) {
         expect(err).toBeInstanceOf(HttpException)
         expect(err.status).toBe(500)
+        expect(err.message).toEqual('Http Exception')
       }
     })
   })
@@ -124,7 +125,7 @@ describe('GithubController', () => {
 
       const response = await githubController.clone(repo)
 
-      expect(githubService.cloneAllIssues).toHaveBeenCalledWith(repo)
+      expect(githubService.cloneAllIssues).toHaveBeenCalledWith(repo, undefined)
       expect(response).toBe(expectedResponse)
     })
 
@@ -140,6 +141,7 @@ describe('GithubController', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(HttpException)
         expect(error.status).toBe(HttpStatus.INTERNAL_SERVER_ERROR)
+        expect(error.message).toBe('Http Exception')
       }
     })
   })

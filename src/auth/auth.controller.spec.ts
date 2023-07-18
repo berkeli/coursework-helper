@@ -38,12 +38,12 @@ describe('AuthController', () => {
     const authEntity: AuthEntity = {
       token: 'fake-token',
       tokenType: 'bearer',
-      expiresAt: '2023-03-26T10:00:00.000Z',
+      type: 'token',
     }
 
     it('should throw an error if code is not provided', async () => {
       const expectedError = new HttpException(
-        'Code is required',
+        { error: 'Code is required' },
         HttpStatus.BAD_REQUEST,
       )
 
@@ -85,7 +85,12 @@ describe('AuthController', () => {
       )
 
       await expect(controller.getAccessToken(code)).rejects.toThrow(
-        expectedError,
+        new HttpException(
+          {
+            error: errorMessage,
+          },
+          HttpStatus.BAD_REQUEST,
+        ),
       )
     })
   })

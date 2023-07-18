@@ -1,19 +1,18 @@
-import { Injectable } from '@nestjs/common'
-import { createAppAuth } from '@octokit/auth-app'
-import { AuthInterface } from '@octokit/auth-app/dist-types/types'
+import { Injectable, Logger } from '@nestjs/common'
+import { createOAuthAppAuth } from '@octokit/auth-oauth-app'
+import { OAuthAppAuthInterface } from '@octokit/auth-oauth-app/dist-types/types'
 import { AuthEntity } from 'src/auth/auth.entity'
 import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class AuthService {
-  private readonly auth: AuthInterface
+  private readonly auth: OAuthAppAuthInterface
 
   constructor(private configService: ConfigService) {
-    this.auth = createAppAuth({
-      appId: configService.get('github.app.id'),
-      privateKey: configService.get('github.app.privateKey'),
-      clientId: configService.get('github.app.clientId'),
-      clientSecret: configService.get('github.app.clientSecret'),
+    this.auth = createOAuthAppAuth({
+      clientType: 'oauth-app',
+      clientId: configService.get('github.oauth.clientId'),
+      clientSecret: configService.get('github.oauth.clientSecret'),
     })
   }
 
@@ -28,9 +27,9 @@ export class AuthService {
     }
 
     return {
+      type: userAuthentication.type,
       token: userAuthentication.token,
       tokenType: userAuthentication.tokenType,
-      expiresAt: (userAuthentication as AuthEntity).expiresAt,
     }
   }
 }

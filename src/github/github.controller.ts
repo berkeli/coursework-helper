@@ -3,6 +3,7 @@ import {
   Get,
   HttpException,
   HttpStatus,
+  Logger,
   Param,
   Post,
   Query,
@@ -63,6 +64,11 @@ export class GithubController {
     required: true,
   })
   @ApiParam({
+    name: 'sprint',
+    description: 'The sprint to select issues from',
+    required: true,
+  })
+  @ApiParam({
     name: 'issue',
     description:
       'The issue number to clone. If not provided, all issues will be cloned',
@@ -72,11 +78,11 @@ export class GithubController {
     description: 'Returns the details about cloned issues',
     type: CloneResponse,
   })
-  async clone(@Param('repo') repo: string, @Param('issue') issue?: number) {
-    console.log({
-      repo,
-      issue,
-    })
+  async clone(
+    @Param('repo') repo: string,
+    @Param('issue') issue?: number,
+    @Query('sprint') sprint?: string,
+  ) {
     if (issue) {
       return this.githubService.cloneIssue(repo, issue).catch((e) => {
         throw new HttpException(
@@ -86,19 +92,23 @@ export class GithubController {
       })
     }
 
+    Logger.debug('Cloning all issues', { repo, sprint })
+
     const s = opentelemetry.trace.getActiveSpan()
     s.setAttribute('repo', repo)
     s.setAttribute('issue', issue)
 
-    const res = await this.githubService.cloneAllIssues(repo).catch((e) => {
-      s.setAttribute('error', true)
-      s.setAttribute('error.message', e.message)
-      s.setAttribute('error.stack', e.stack)
-      throw new HttpException(
-        { error: e.message },
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      )
-    })
+    const res = await this.githubService
+      .cloneAllIssues(repo, sprint)
+      .catch((e) => {
+        s.setAttribute('error', true)
+        s.setAttribute('error.message', e.message)
+        s.setAttribute('error.stack', e.stack)
+        throw new HttpException(
+          { error: e.message },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        )
+      })
 
     s.setAttribute('issues', res.total)
     s.setAttribute('failed', res.failed)

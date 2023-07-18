@@ -15,6 +15,7 @@ import {
 } from '@nestjs/swagger'
 import { AuthEntity } from './auth.entity'
 import { AuthService } from './auth.service'
+import { OAuthApp } from 'octokit'
 
 @Controller('auth')
 @ApiTags('auth')
@@ -37,13 +38,16 @@ export class AuthController {
   })
   async getAccessToken(@Query('code') code: string) {
     if (!code) {
-      throw new HttpException('Code is required', HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        { error: 'Code is required' },
+        HttpStatus.BAD_REQUEST,
+      )
     }
 
     return this.authService.getAccessToken(code).catch((error) => {
       Logger.error(error.message, 'AuthController')
 
-      throw new HttpException(error.message, HttpStatus.UNAUTHORIZED)
+      throw new HttpException({ error: error.message }, HttpStatus.UNAUTHORIZED)
     })
   }
 }

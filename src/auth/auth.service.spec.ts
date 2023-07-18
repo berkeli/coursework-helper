@@ -28,7 +28,10 @@ describe('AuthController', () => {
   describe('getAccessToken', () => {
     it('should throw an error if code is not provided', async () => {
       await expect(controller.getAccessToken(undefined)).rejects.toThrowError(
-        new HttpException('Code is required', HttpStatus.BAD_REQUEST),
+        new HttpException(
+          { error: 'Code is required' },
+          HttpStatus.BAD_REQUEST,
+        ),
       )
     })
 
@@ -36,8 +39,8 @@ describe('AuthController', () => {
       const code = 'test-code'
       const expectedResponse: AuthEntity = {
         token: 'test-token',
-        expiresAt: 'test-expires-at',
         tokenType: 'test-token-type',
+        type: 'test-type',
       }
 
       jest
@@ -59,7 +62,10 @@ describe('AuthController', () => {
         .mockRejectedValueOnce(expectedError)
 
       await expect(controller.getAccessToken(code)).rejects.toThrowError(
-        new HttpException(expectedError.message, HttpStatus.UNAUTHORIZED),
+        new HttpException(
+          { error: expectedError.message },
+          HttpStatus.UNAUTHORIZED,
+        ),
       )
     })
   })
