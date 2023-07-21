@@ -15,7 +15,6 @@ import {
 } from '@nestjs/swagger'
 import { AuthEntity } from './auth.entity'
 import { AuthService } from './auth.service'
-import { OAuthApp } from 'octokit'
 
 @Controller('auth')
 @ApiTags('auth')

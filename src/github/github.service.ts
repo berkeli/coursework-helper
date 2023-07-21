@@ -460,13 +460,19 @@ export class GithubService {
     const issues = await this.getIssuesForRepo(sourceRepoName).catch(
       (error) => {
         span.end()
-        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+        throw new HttpException(
+          { error: error.message },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        )
       },
     )
 
     if (!issues || issues.length === 0) {
       span.end()
-      throw new HttpException('No issues found', HttpStatus.BAD_REQUEST)
+      throw new HttpException(
+        { error: 'No issues found' },
+        HttpStatus.BAD_REQUEST,
+      )
     }
 
     await this.initialSetup()
@@ -481,7 +487,10 @@ export class GithubService {
         this.login,
       ).catch((error) => {
         span.end()
-        throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)
+        throw new HttpException(
+          { error: error.message },
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        )
       })
 
       userIssues.forEach((issue) => {
@@ -537,7 +546,9 @@ export class GithubService {
       .catch((error) => {
         log.error(error, 'GithubService:cloneSingleIssue')
         throw new HttpException(
-          `Could not get issue ${issueNumber} from ${sourceRepoName}, error: ${error.message}`,
+          {
+            error: `Could not get issue ${issueNumber} from ${sourceRepoName}, error: ${error.message}`,
+          },
           HttpStatus.INTERNAL_SERVER_ERROR,
         )
       })
@@ -592,7 +603,9 @@ export const githubServiceProvider = {
           .catch((error) => {
             log.error(error, 'GithubService')
             throw new HttpException(
-              `Could not get installations, app must be installed in the organization. Error: ${error.message}`,
+              {
+                error: `Could not get installations, app must be installed in the organization. Error: ${error.message}`,
+              },
               HttpStatus.INTERNAL_SERVER_ERROR,
             )
           })
@@ -614,7 +627,10 @@ export const githubServiceProvider = {
     const token = request.headers.authorization
     if (!token) {
       log.error('Missing JWT Token', 'GithubService')
-      throw new HttpException('Missing JWT Token', HttpStatus.UNAUTHORIZED)
+      throw new HttpException(
+        { error: 'Missing JWT Token' },
+        HttpStatus.UNAUTHORIZED,
+      )
     }
 
     const userOctokit = new Octokit({
@@ -628,7 +644,9 @@ export const githubServiceProvider = {
       .catch((error) => {
         log.error(error, 'GithubService')
         throw new HttpException(
-          `Could not get authenticated user, error: ${error.message}`,
+          {
+            error: `Could not get authenticated user, error: ${error.message}`,
+          },
           HttpStatus.UNAUTHORIZED,
         )
       })
