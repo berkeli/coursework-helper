@@ -504,18 +504,19 @@ export class GithubService {
     }
 
     const res = new CloneResponse(issues.length)
-    log.debug(`Cloning ${issues.length} issues`, 'GithubService:cloneAllIssues')
+
     for (const issue of issues) {
       // skip if issue is not in sprint
       if (
         sprint &&
         issue.labels.findIndex((l) => {
           if (typeof l === 'string') {
-            return l.toLowerCase() === sprint.toLowerCase()
+            return l.toLowerCase().includes(sprint.toLowerCase())
           }
-          return l.name.toLowerCase() === sprint.toLowerCase()
+          return l.name.toLowerCase().includes(sprint.toLowerCase())
         }) === -1
       ) {
+        res.skipped++
         continue
       }
 
