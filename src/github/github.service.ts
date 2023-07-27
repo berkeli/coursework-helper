@@ -625,7 +625,8 @@ export const githubServiceProvider = {
 
       return new GithubService(installOctokit, '', '', cache, configService)
     }
-    const token = request.headers.authorization
+
+    const token = request.cookies.access_token
     if (!token) {
       log.error('Missing JWT Token', 'GithubService')
       throw new HttpException(
@@ -635,7 +636,7 @@ export const githubServiceProvider = {
     }
 
     const userOctokit = new Octokit({
-      auth: token.split(' ')[1],
+      auth: token,
     })
 
     // get authenticated user to get login and node_id

@@ -6,6 +6,8 @@ import {
   Logger,
   Post,
   Query,
+  Res,
+  Req,
 } from '@nestjs/common'
 import {
   ApiBadRequestResponse,
@@ -15,6 +17,7 @@ import {
 } from '@nestjs/swagger'
 import { AuthEntity } from './auth.entity'
 import { AuthService } from './auth.service'
+import { Response, Request } from 'express'
 
 @Controller('auth')
 @ApiTags('auth')
@@ -35,7 +38,21 @@ export class AuthController {
   @ApiUnauthorizedResponse({
     description: 'Invalid code',
   })
-  async getAccessToken(@Query('code') code: string) {
+  async getAccessToken(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query('code') code: string,
+  ) {
+    // check if httpOnly cookie is set
+    if (req.cookies.access_token) {
+      return res
+        .status(HttpStatus.OK)
+        .json({
+          message: 'User is already authenticated',
+        })
+        .end()
+    }
+
     if (!code) {
       throw new HttpException(
         { error: 'Code is required' },
@@ -43,10 +60,32 @@ export class AuthController {
       )
     }
 
-    return this.authService.getAccessToken(code).catch((error) => {
+    const a = await this.authService.getAccessToken(code).catch((error) => {
       Logger.error(error.message, 'AuthController')
 
       throw new HttpException({ error: error.message }, HttpStatus.UNAUTHORIZED)
     })
+
+    res.cookie('access_token', a.token, {
+      httpOnly: true,
+    })
+
+    res
+      .json({
+        message: 'User authenticated',
+      })
+      .end()
+  }
+
+  @Post('logout')
+  logout(@Res() res: Response) {
+    res.clearCookie('access_token')
+
+    res
+      .status(HttpStatus.OK)
+      .json({
+        message: 'User logged out',
+      })
+      .end()
   }
 }

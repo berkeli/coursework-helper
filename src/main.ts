@@ -1,3 +1,4 @@
+import * as cookieParser from 'cookie-parser'
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from 'src/app.module'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
@@ -19,6 +20,8 @@ async function bootstrap() {
     type: VersioningType.URI,
     defaultVersion: '1',
   })
+
+  app.use(cookieParser())
 
   const config = new DocumentBuilder()
     .setTitle('CYF Coursework Helper API')

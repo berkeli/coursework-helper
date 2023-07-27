@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common'
 import { GithubService } from './github.service'
 import { ApiParam, ApiOkResponse } from '@nestjs/swagger'
