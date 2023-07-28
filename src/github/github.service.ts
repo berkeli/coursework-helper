@@ -647,7 +647,7 @@ export const githubServiceProvider = {
         log.error(error, 'GithubService')
         throw new HttpException(
           {
-            error: `Could not get authenticated user, error: ${error.message}`,
+            error: `Could not get authenticated user token (${token}), error: ${error.message}`,
           },
           HttpStatus.UNAUTHORIZED,
         )
