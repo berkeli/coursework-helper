@@ -44,14 +44,14 @@ export class AuthController {
     @Query('code') code: string,
   ) {
     // check if httpOnly cookie is set
-    if (req.cookies.access_token) {
-      return res
-        .status(HttpStatus.OK)
-        .json({
-          message: 'User is already authenticated',
-        })
-        .end()
-    }
+    // if (req.cookies.access_token) {
+    //   return res
+    //     .status(HttpStatus.OK)
+    //     .json({
+    //       message: 'User is already authenticated',
+    //     })
+    //     .end()
+    // }
 
     if (!code) {
       throw new HttpException(
