@@ -68,6 +68,8 @@ export class AuthController {
 
     res.cookie('access_token', a.token, {
       httpOnly: true,
+      sameSite: 'none',
+      secure: true,
     })
 
     res
