@@ -14,6 +14,7 @@ async function bootstrap() {
     origin: configuration().clientUrls,
     methods: ['GET', 'POST'],
     credentials: true,
+    exposedHeaders: ['set-cookie'],
   })
 
   app.enableVersioning({
