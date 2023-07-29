@@ -22,8 +22,6 @@ export class AuthService {
       code,
     })
 
-    console.log(userAuthentication)
-
     if (!userAuthentication) {
       return null
     }

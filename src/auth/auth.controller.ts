@@ -66,6 +66,8 @@ export class AuthController {
       throw new HttpException({ error: error.message }, HttpStatus.UNAUTHORIZED)
     })
 
+    Logger.debug('setting cookie', 'AuthController', a.token)
+
     res.cookie('access_token', a.token, {
       httpOnly: true,
       sameSite: 'none',
