@@ -43,16 +43,6 @@ export class AuthController {
     @Res() res: Response,
     @Query('code') code: string,
   ) {
-    // check if httpOnly cookie is set
-    // if (req.cookies.access_token) {
-    //   return res
-    //     .status(HttpStatus.OK)
-    //     .json({
-    //       message: 'User is already authenticated',
-    //     })
-    //     .end()
-    // }
-
     if (!code) {
       throw new HttpException(
         { error: 'Code is required' },
@@ -65,8 +55,6 @@ export class AuthController {
 
       throw new HttpException({ error: error.message }, HttpStatus.UNAUTHORIZED)
     })
-
-    Logger.debug('setting cookie', 'AuthController', a.token)
 
     res.cookie('access_token', a.token, {
       httpOnly: true,
